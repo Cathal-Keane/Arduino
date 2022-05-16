@@ -9,7 +9,7 @@ void setup() {
     while (fabs(analogRead(A5)*5/1024. - lastReading) < 0.1) {
       time = micros();
     }
-    for (int i = 0; i < 500; i++) {  /* This takes 500 voltage points and plots them */
+    for (int i = 0; i < 500; i++) {  // This takes 500 voltage points and plots them
       unsigned long now = micros();
       Serial.print(now - time);
       Serial.print(" ");
@@ -17,6 +17,6 @@ void setup() {
       Serial.println(currentReading);
     }
     while (1) {
-      // do nothing
+      // Do nothing
     }
   }
