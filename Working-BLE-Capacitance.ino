@@ -4,8 +4,8 @@
 // BLE UUIDs
 //----------------------------------------------------------------------------------------------------------------------
 
-#define BLE_UUID_TEST_SERVICE               "9A48ECBA-2E92-082F-C079-9E75AAE428B1"
-#define BLE_UUID_FLOAT_VALUE                "C8F88594-2217-0CA6-8F06-A4270B675D69"
+#define BLE_UUID_TEST_SERVICE               "9A48ECBA-2E92-082F-C079-9E75AAE428B1" //set UUID test service
+#define BLE_UUID_FLOAT_VALUE                "C8F88594-2217-0CA6-8F06-A4270B675D69" //set UUID float value
 
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -19,7 +19,7 @@ BLEFloatCharacteristic floatValueCharacteristic( BLE_UUID_FLOAT_VALUE, BLENotify
 const int OUT_PIN = A2;
 const int IN_PIN = A0;
 
-const float IN_STRAY_CAP_TO_GND = 1.80; //initially this was 30.00
+const float IN_STRAY_CAP_TO_GND = 1.80; //initially this was 30.00, need to set this value based on the circuits built-in capacitance
 const float IN_EXTRA_CAP_TO_GND = 0.0;
 const float IN_CAP_TO_GND  = IN_STRAY_CAP_TO_GND + IN_EXTRA_CAP_TO_GND;
 const int MAX_ADC_VALUE = 1023;
