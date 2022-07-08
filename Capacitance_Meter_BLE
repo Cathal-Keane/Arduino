@@ -1,0 +1,92 @@
+#include <ArduinoBLE.h>
+#include <Wire.h>
+#include <wiring_analog.h>
+
+#define BLE_UUID_TEST_SERVICE               "#####################################"
+#define BLE_UUID_FLOAT_VALUE                "#####################################"
+
+
+
+BLEService testService( BLE_UUID_TEST_SERVICE );
+BLEFloatCharacteristic floatValueCharacteristic( BLE_UUID_FLOAT_VALUE, BLENotify );
+
+const int OUT_PIN = A2; //A2
+const int IN_PIN = A0; //A0
+
+const float IN_STRAY_CAP_TO_GND = 1.01; //Set this according to capacitor
+const float IN_EXTRA_CAP_TO_GND = 0.0;
+const float IN_CAP_TO_GND  = IN_STRAY_CAP_TO_GND + IN_EXTRA_CAP_TO_GND;
+const int MAX_ADC_VALUE = 1023; //1023
+
+
+void setup() 
+{
+  analogReference(AR_INTERNAL); // Change as required, default @ 5V is generally ok for other boards. Nano is quite sensitive however
+  
+  pinMode(OUT_PIN, OUTPUT);
+  //digitalWrite(OUT_PIN, LOW);  /* This is the default state for outputs */
+  //pinMode(IN_PIN, OUTPUT);
+  //digitalWrite(IN_PIN, LOW);
+
+  
+
+  //Clear everything for next measurement
+  digitalWrite(OUT_PIN, LOW);
+  pinMode(IN_PIN, OUTPUT);
+
+
+  BLE.begin();
+  Serial.begin(115200);
+
+  // set advertised local name and service
+  BLE.setDeviceName( "Arduino Nano 33 BLE" );
+  BLE.setLocalName( "Arduino Nano 33 BLE" );
+  BLE.setAdvertisedService( testService );
+
+  // BLE add characteristics
+  testService.addCharacteristic( floatValueCharacteristic );
+ 
+
+  // add service
+  BLE.addService( testService );
+
+  BLE.advertise();
+
+}
+
+void loop()
+{
+  /*Capacitor under test between OUT_PIN and IN_PIN */
+  /*Rising high edge on OUT_PIN */ /*
+
+  //Calculate the average:
+  average = total / numReadings; */
+
+  pinMode(IN_PIN, INPUT);
+  digitalWrite(OUT_PIN, HIGH);
+  int val = analogRead(IN_PIN);
+
+  //Clear everything for next measurement
+  digitalWrite(OUT_PIN, LOW);
+  pinMode(IN_PIN, OUTPUT);
+
+
+  float capacitance = (float)val * IN_CAP_TO_GND / (float)(MAX_ADC_VALUE - val);
+
+  floatValueCharacteristic.writeValue( capacitance );
+  
+  /*Serial.print(F("Capacitance Value = "));  /*These two line can be commented out in favour of block below (lines 81-85) */
+  /*Serial.println(capacitance, 3);       /*The two lines print only the capacitance hence are useful for copying data from the serial */
+
+  Serial.print(F("Capacitance Value = "));
+  Serial.print(capacitance, 3);
+  Serial.print(F(" pF (")); 
+  Serial.println(val);
+  Serial.println(F(") ")); 
+  
+  while (millis() % 50 != 0)
+
+  BLEDevice central = BLE.central();
+
+  delay(100);
+} 
